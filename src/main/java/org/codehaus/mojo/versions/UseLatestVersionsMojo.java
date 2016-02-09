@@ -23,6 +23,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.metadata.ArtifactMetadataRetrievalException;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.model.Dependency;
+import org.apache.maven.model.DependencyManagement;
 import org.apache.maven.model.Model;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -90,8 +91,11 @@ public class UseLatestVersionsMojo
         {
             if ( getProject().getDependencyManagement() != null && isProcessingDependencyManagement() )
             {
-                Model rawModel = PomHelper.getRawModel( getProject() );
-                useLatestVersions( pom, rawModel.getDependencyManagement().getDependencies() );
+                DependencyManagement dependencyManagement = PomHelper.getRawModel( getProject() ).getDependencyManagement();
+                if ( dependencyManagement != null )
+                {
+                    useLatestVersions( pom, dependencyManagement.getDependencies() );
+                }
             }
             if ( isProcessingDependencies() )
             {
